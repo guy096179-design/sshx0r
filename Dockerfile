@@ -3,8 +3,8 @@ WORKDIR /home/rust/src
 RUN apk --no-cache add musl-dev openssl-dev protoc
 RUN rustup component add rustfmt
 COPY . .
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/home/rust/src/target \
+RUN --mount=type=cache,id=s/b84facaf-eeaa-49f2-896e-d1f61945c8de-/usr/local/cargo/registry,target=/usr/local/cargo/registry \
+    --mount=type=cache,id=s/b84facaf-eeaa-49f2-896e-d1f61945c8de-/home/rust/src/target,target=/home/rust/src/target \
     cargo build --release --bin sshx-server && \
     cp target/release/sshx-server /usr/local/bin
 
