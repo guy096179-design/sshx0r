@@ -3,7 +3,23 @@ import { execSync } from "node:child_process";
 import { defineConfig } from "vite";
 import { sveltekit } from "@sveltejs/kit/vite";
 
-const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
+function getCommitHash(): string {
+  try {
+    return execSync("git rev-parse --short HEAD", {
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+      .toString()
+      .trim();
+  } catch {
+    return (
+      process.env.RAILWAY_GIT_COMMIT_SHA?.slice(0, 7) ??
+      process.env.GIT_COMMIT_SHA?.slice(0, 7) ??
+      "unknown"
+    );
+  }
+}
+
+const commitHash = getCommitHash();
 
 export default defineConfig({
   define: {
